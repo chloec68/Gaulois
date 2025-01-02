@@ -26,3 +26,40 @@ order by n DESC
 SELECT nom_bataille,DATE_FORMAT(bataille.date_bataille,'%d,%M,%Y') as date,nom_lieu from bataille
 inner join lieu on bataille.id_lieu = lieu.id_lieu
 order by date DESC
+
+-- Nom des potions + coût de réalisation de la potion (trié par coût décroissant)
+SELECT nom_potion,SUM(ingredient.cout_ingredient*composer.qte) as coutTotalIngredients from composer 
+inner join potion on composer.id_potion = potion.id_potion 
+inner join ingredient on composer.id_ingredient = ingredient.id_ingredient
+group by nom_potion
+
+-- nom_potion 	coutTotalIngredients 	
+-- Assouplissement I 	200
+-- Assouplissement II 	45.5
+-- Coloration pour cheveux 	12
+-- Envol 	45
+-- Force 	47
+-- Gigantisme 	10.5
+-- Intelligence 	71
+-- Invisibilité 	28
+-- Magique 	240
+-- Rajeunissement I 	120
+-- Rajeunissement II 	86
+-- Santé 	1457
+-- Soupe 	34.5
+-- Vitesse 	42
+
+-- Nom des ingrédients + coût + quantité de chaque ingrédient qui composent la potion 'Santé'
+SELECT ingredient.nom_ingredient,nom_potion, ingredient.cout_ingredient, qte from ingredient
+INNER JOIN composer on ingredient.id_ingredient = composer.id_ingredient
+inner join potion on composer.id_potion = potion.id_potion
+where potion.id_potion = 3
+
+-- nom_ingredient 	nom_potion 	cout_ingredient 	qte 	
+-- Bave de crapaud 	Santé 	16.5 	78
+-- Huile de roche 	Santé 	30 	3
+-- Edelweiss 	Santé 	80 	1
+
+-- Nom du ou des personnages qui ont pris le plus de casques dans la bataille 'Bataille du village
+-- gaulois'
+
