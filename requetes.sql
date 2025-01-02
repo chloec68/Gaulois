@@ -62,4 +62,46 @@ where potion.id_potion = 3
 
 -- Nom du ou des personnages qui ont pris le plus de casques dans la bataille 'Bataille du village
 -- gaulois'
+SELECT MAX(prendre_casque.qte) as qtemax, nom_personnage
+FROM prendre_casque
+INNER JOIN personnage ON prendre_casque.id_personnage = personnage.id_personnage
+WHERE id_bataille = 1
+GROUP BY nom_personnage
 
+-- 12 	Abraracourcix
+-- 21 	Astérix
+-- 60 	Obélix
+
+-- Nom des personnages et leur quantité de potion bue (en les classant du plus grand buveur
+-- au plus petit)
+
+SELECT dose_boire,nom_personnage from boire
+INNER JOIN personnage on boire.id_personnage = personnage.id_personnage
+ORDER BY dose_boire DESC
+
+--  dose_boire Décroissant 1 	nom_personnage 	
+-- 38 	Obélix
+-- 20 	Maestria
+-- 20 	Agecanonix
+-- 14 	Avoranfix
+-- 12 	Agecanonix
+-- 12 	Vanendfaillevesix
+-- 12 	Gueuselambix
+-- 9 	Abraracourcix
+-- 8 	Septantesix
+-- 7 	Acidcloridrix
+-- 7 	Ordralfabétix
+-- 6 	Assurancetourix
+-- 5 	Agecanonix
+-- 5 	Pneumatix
+-- 5 	Septantesix
+-- 3 	Cétautomatix
+-- 3 	Changélédix
+-- 3 	Choucroutgarnix
+-- 3 	Falbala
+-- 3 	Moralélastix
+-- 2 	Astérix
+-- 2 	Assurancetourix
+-- 2 	Agecanonix
+-- 2 	Panoramix
+-- 2 	Zérozérosix
