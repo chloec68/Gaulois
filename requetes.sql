@@ -33,32 +33,11 @@ inner join potion on composer.id_potion = potion.id_potion
 inner join ingredient on composer.id_ingredient = ingredient.id_ingredient
 group by nom_potion
 
--- nom_potion 	coutTotalIngredients 	
--- Assouplissement I 	200
--- Assouplissement II 	45.5
--- Coloration pour cheveux 	12
--- Envol 	45
--- Force 	47
--- Gigantisme 	10.5
--- Intelligence 	71
--- Invisibilité 	28
--- Magique 	240
--- Rajeunissement I 	120
--- Rajeunissement II 	86
--- Santé 	1457
--- Soupe 	34.5
--- Vitesse 	42
-
 -- 7. Nom des ingrédients + coût + quantité de chaque ingrédient qui composent la potion 'Santé'
 SELECT ingredient.nom_ingredient,nom_potion, ingredient.cout_ingredient, qte from ingredient
 INNER JOIN composer on ingredient.id_ingredient = composer.id_ingredient
 inner join potion on composer.id_potion = potion.id_potion
 where potion.id_potion = 3
-
--- nom_ingredient 	nom_potion 	cout_ingredient 	qte 	
--- Bave de crapaud 	Santé 	16.5 	78
--- Huile de roche 	Santé 	30 	3
--- Edelweiss 	Santé 	80 	1
 
 -- 8. Nom du ou des personnages qui ont pris le plus de casques dans la bataille 'Bataille du village
 -- gaulois'
@@ -68,43 +47,12 @@ INNER JOIN personnage ON prendre_casque.id_personnage = personnage.id_personnage
 WHERE id_bataille = 1
 GROUP BY nom_personnage
 
--- 12 	Abraracourcix
--- 21 	Astérix
--- 60 	Obélix
-
 -- 9. Nom des personnages et leur quantité de potion bue (en les classant du plus grand buveur
 -- au plus petit)
 
 SELECT dose_boire,nom_personnage from boire
 INNER JOIN personnage on boire.id_personnage = personnage.id_personnage
 ORDER BY dose_boire DESC
-
---  dose_boire Décroissant 1 	nom_personnage 	
--- 38 	Obélix
--- 20 	Maestria
--- 20 	Agecanonix
--- 14 	Avoranfix
--- 12 	Agecanonix
--- 12 	Vanendfaillevesix
--- 12 	Gueuselambix
--- 9 	Abraracourcix
--- 8 	Septantesix
--- 7 	Acidcloridrix
--- 7 	Ordralfabétix
--- 6 	Assurancetourix
--- 5 	Agecanonix
--- 5 	Pneumatix
--- 5 	Septantesix
--- 3 	Cétautomatix
--- 3 	Changélédix
--- 3 	Choucroutgarnix
--- 3 	Falbala
--- 3 	Moralélastix
--- 2 	Astérix
--- 2 	Assurancetourix
--- 2 	Agecanonix
--- 2 	Panoramix
--- 2 	Zérozérosix
 
 -- 10. Nom de la bataille où le nombre de casques pris a été le plus important.
 SELECT nom_bataille, MAX(prendre_casque.qte) AS max_qte
@@ -124,19 +72,11 @@ LIMIT 1;
 SELECT nom_type_casque, sum(cout_casque) from casque 
 INNER JOIN type_casque on casque.id_type_casque = type_casque.id_type_casque
 GROUP BY nom_type_casque
---  nom_type_casque 	sum(cout_casque) 	
--- Autre 	3114
--- Grec 	3558
--- Normand 	14020
--- Romain 	2413
 
 -- 12. Nom des potions dont un des ingrédients est le poisson frais.
 SELECT potion.nom_potion from composer 
 INNER JOIN potion on composer.id_potion = potion.id_potion
 WHERE id_ingredient= 24 
---  nom_potion 	
--- Magique
--- Intelligence
 
 -- 13. Nom du / des lieu(x) possédant le plus d'habitants, en dehors du village gaulois.
 SELECT max(personnage.id_personnage) as maxPersonnages,lieu.nom_lieu 
@@ -146,52 +86,15 @@ WHERE lieu.id_lieu !=1
 GROUP BY lieu.nom_lieu
 ORDER BY maxPersonnages DESC
 
- maxPersonnages Décroissant 1 	nom_lieu 	
-45 	Rotomagus
-44 	Condate
-41 	Nicae
-40 	Lugdunum
-39 	Lutèce
-37 	Massilia
-33 	Alesia
-32 	Forêt des Carnutes
-31 	Gergovie
-22 	Gesocribate
-20 	Village belge
-
 -- 14. Nom des personnages qui n'ont jamais bu aucune potion.
 SELECT nom_personnage from boire 
 left join personnage on boire.id_personnage = personnage.id_personnage
 WHERE dose_boire IS NULL
 
 -- 15. Nom du / des personnages qui n'ont pas le droit de boire de la potion 'Magique'.
-SELECT nom_personnage from autoriser_boire 
-INNER JOIN personnage on personnage.id_personnage = autoriser_boire.id_personnage 
-WHERE autoriser_boire.id_potion <>1
+SELECT nom_personnage FROM personnage
+LEFT JOIN autoriser_boire ON personnage.id_personnage = autoriser_boire.id_personnage
+AND autoriser_boire.id_potion = 1
+WHERE autoriser_boire.id_personnage IS NULL;
 
---  nom_personnage 	
--- Agecanonix
--- Panoramix
--- Arrièreboutix
--- Agecanonix
--- Pneumatix
--- Zérozérosix
--- Acidcloridrix
--- Agecanonix
--- Vanendfaillevesix
--- Gueuselambix
--- Panoramix
--- Maestria
--- Bainpublix
--- Septantesix
--- Obélix
--- Avoranfix
--- Agecanonix
--- Goudurix
--- Septantesix
--- Assurancetourix
--- Bonemine
--- Falbala
--- Acidcloridrix
--- Moralélastix
--- Acidcloridrix
+
