@@ -155,6 +155,15 @@ WHERE id_personnage NOT IN (
     WHERE dose_boire > 0
 )
 
+-- ou : 
+
+SELECT personnage.nom_personnage
+FROM personnage
+WHERE personnage.id_personnage NOT IN (
+    SELECT id_personnage
+    FROM boire
+);
+
 -- 15. Nom du / des personnages qui n'ont pas le droit de boire de la potion 'Magique'.
 SELECT nom_personnage FROM personnage
 LEFT JOIN autoriser_boire ON personnage.id_personnage = autoriser_boire.id_personnage
