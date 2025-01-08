@@ -108,6 +108,19 @@ LIMIT 1
 
 -- Résultat sans LIMIT 1 : "Bataille du village gaulois 101" + "Anniversaire d'Obélix 76"
 
+-- CORRECTION : 
+
+SELECT SUM(qte),nom_bataille
+FROM prendre_casque
+INNER JOIN bataille ON prendre_casque.id_bataille = bataille.id_bataille
+GROUP BY prendre_casque.id_bataille
+HAVING SUM(qte) >= ALL (
+    SELECT SUM(qte) as totalCasquePris
+    FROM prendre_casque pc
+    INNER JOIN bataille b ON pc.id_bataille = b.id_bataille
+    GROUP BY pc.id_bataille
+)
+
 -- 11. Combien existe-t-il de casques de chaque type et quel est leur coût total ? (classés par
 -- nombre décroissant)
 SELECT nom_type_casque, sum(cout_casque) FROM casque 
@@ -120,23 +133,19 @@ INNER JOIN potion ON composer.id_potion = potion.id_potion
 WHERE id_ingredient= 24 
 
 -- 13. Nom du / des lieu(x) possédant le plus d'habitants, en dehors du village gaulois.
-SELECT MAX(personnage.id_personnage) AS nbMaxPersonnages,lieu.nom_lieu 
-FROM lieu
-INNER JOIN personnage ON lieu.id_lieu = personnage.id_lieu 
-WHERE lieu.id_lieu !=1
-GROUP BY lieu.id_lieu
-ORDER BY nbMaxPersonnages DESC
-
 -- proposition sans MAX, ni LIMIT avec ALL + sous-requête (FAUX)
- SELECT COUNT(p.id_personnage),l.nom_lieu 
+
+SELECT COUNT(p.id_personnage),l.nom_lieu
     FROM personnage p
     INNER JOIN lieu l ON l.id_lieu = p.id_lieu
+    WHERE l.id_lieu != 1
     GROUP BY l.id_lieu
-    HAVING COUNT(p.id_personnage) > ALL(
-    SELECT COUNT(p2.id_personnage)
-    FROM personnage p2
-    INNER JOIN lieu l2 ON l2.id_lieu = p2.id_lieu
-    GROUP BY l2.id_lieu
+    HAVING COUNT(p.id_personnage) >= ALL(
+     SELECT COUNT(p2.id_personnage)
+     FROM personnage p2
+     INNER JOIN lieu l2 ON l2.id_lieu = p2.id_lieu
+     WHERE l2.id_lieu != 1
+     GROUP BY l2.id_lieu
 )
 
 -- 14. Nom des personnages qui n'ont jamais bu aucune potion.
